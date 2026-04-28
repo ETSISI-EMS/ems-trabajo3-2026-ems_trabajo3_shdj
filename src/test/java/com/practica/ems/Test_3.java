@@ -1,20 +1,17 @@
 package com.practica.ems;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.practica.ems.covid.ContactosCovid;
 import com.practica.excecption.EmsDuplicateLocationException;
 import com.practica.excecption.EmsDuplicatePersonException;
 import com.practica.excecption.EmsInvalidNumberOfDataException;
 import com.practica.excecption.EmsInvalidTypeException;
-import com.practica.excecption.EmsLocalizationNotFoundException;
-import com.practica.excecption.EmsPersonNotFoundException;
 import com.practica.genericas.FechaHora;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class Test_3 {
 	private static ContactosCovid contactosCovid;
@@ -52,9 +49,9 @@ public class Test_3 {
 	@DisplayName("Al aniadir un nuevo nodo al principio la lista temporal aumenta en uno")
 	@Test
 	void test_5 () throws EmsInvalidTypeException, EmsInvalidNumberOfDataException, EmsDuplicatePersonException, EmsDuplicateLocationException {
-		int tam_ant = contactosCovid.getListaContactos().tamanioLista();
+		int tamAnt = contactosCovid.getListaContactos().tamanioLista();
 		contactosCovid.loadData("LOCALIZACION;66666666S;25/05/2021;11:01;44.3870;2.4698", false);
-		assertEquals(contactosCovid.getListaContactos().tamanioLista(), (tam_ant+1));
+		assertEquals(contactosCovid.getListaContactos().tamanioLista(), (tamAnt+1));
 	}
 
 	@DisplayName("Aniadimos un nuevo nodo temporal al final de la lista")

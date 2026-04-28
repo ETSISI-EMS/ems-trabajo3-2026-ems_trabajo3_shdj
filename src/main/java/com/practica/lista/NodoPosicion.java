@@ -34,7 +34,8 @@ public class NodoPosicion {
 	 * Constructor por copia
 	 */
 	public NodoPosicion(NodoPosicion np) {
-		this.coordenada = new Coordenada(np.coordenada.getLatitud(), np.coordenada.getLongitud());		this.numPersonas = np.numPersonas;
+		this.coordenada = new Coordenada(np.coordenada.getLatitud(),
+				np.coordenada.getLongitud());		this.numPersonas = np.numPersonas;
 	}
 
 	/**
