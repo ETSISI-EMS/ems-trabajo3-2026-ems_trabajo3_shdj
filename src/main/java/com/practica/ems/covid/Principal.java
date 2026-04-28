@@ -7,9 +7,9 @@ import com.practica.excecption.EmsInvalidTypeException;
 import com.practica.genericas.FechaHora;
 
 public class Principal {
-	
-	
-	public static void main(String[] args) throws EmsDuplicatePersonException, EmsDuplicateLocationException, EmsInvalidTypeException, EmsInvalidNumberOfDataException {
+
+
+	public static void main(String[] args) throws EmsDuplicatePersonException, EmsDuplicateLocationException, EmsInvalidTypeException, EmsInvalidNumberOfDataException, java.io.IOException {
 		String test_data_str = "PERSONA;87654321K;Jessica;Diaz;jessica.diaz@ems.com;La calle de jessica, 33;28033;25/01/1980\n" +
 	            "PERSONA;98765432J;Angel;Panizo;angel.panizo@ems.com;La calle de Angel, 46;28871;12/01/1995\n" +
 	            "LOCALIZACION;87654321K;25/10/2021;23:41;41.3870;2.1698\n" +

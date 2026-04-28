@@ -8,7 +8,7 @@ import java.util.Locale;
 public class FechaHora implements Comparable<FechaHora>{
 	public class Fecha {
 		private int dia, mes, anio;
-		 
+
 		public Fecha(int dia, int mes, int anio) {
 			super();
 			this.dia = dia;
@@ -45,8 +45,8 @@ public class FechaHora implements Comparable<FechaHora>{
 			String cadena = String.format("%2d/%02d/%4d",dia,mes,anio);
 			return cadena;
 		}
-		
-		
+
+
 
 	}
 
@@ -79,18 +79,14 @@ public class FechaHora implements Comparable<FechaHora>{
 		public String toString() {
 			return String.format("%02d:%02d", hora,minuto);
 		}
-		
+
 
 	}
 
 	Fecha fecha;
 	Hora hora;
-	
-	public FechaHora(Fecha fecha, Hora hora) {
-		super();
-		this.fecha = fecha;
-		this.hora = hora;
-	}
+
+
 
 	public FechaHora(int dia, int mes, int anio, int hora, int minuto) {
 		this.fecha = new Fecha(dia, mes, anio);
@@ -139,13 +135,27 @@ public class FechaHora implements Comparable<FechaHora>{
 
 	@Override
 	public int compareTo(FechaHora o) {
-		LocalDateTime dateTime1= LocalDateTime.of(this.getFecha().getAnio(), this.getFecha().getMes(), this.getFecha().getDia(), 
+		LocalDateTime dateTime1= LocalDateTime.of(this.getFecha().getAnio(), this.getFecha().getMes(), this.getFecha().getDia(),
 				this.getHora().getHora(), this.getHora().getMinuto());
-		LocalDateTime dateTime2= LocalDateTime.of(o.getFecha().getAnio(), o.getFecha().getMes(), o.getFecha().getDia(), 
+		LocalDateTime dateTime2= LocalDateTime.of(o.getFecha().getAnio(), o.getFecha().getMes(), o.getFecha().getDia(),
 				o.getHora().getHora(), o.getHora().getMinuto());
-		
+
 		return dateTime1.compareTo(dateTime2);
 	}
-	
-	
+	// Dentro de FechaHora.java
+	public static FechaHora parseFecha(String fechaStr) {
+		String[] valores = fechaStr.split("/");
+		return new FechaHora(Integer.parseInt(valores[0]), Integer.parseInt(valores[1]), Integer.parseInt(valores[2]), 0, 0);
+	}
+
+	public static FechaHora parseFecha(String fechaStr, String horaStr) {
+		String[] vFecha = fechaStr.split("/");
+		String[] vHora = horaStr.split(":");
+		return new FechaHora(
+				Integer.parseInt(vFecha[0]), Integer.parseInt(vFecha[1]), Integer.parseInt(vFecha[2]),
+				Integer.parseInt(vHora[0]), Integer.parseInt(vHora[1])
+		);
+	}
+
+
 }
