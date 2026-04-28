@@ -1,13 +1,13 @@
 package com.practica.ems.covid;
 
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import com.practica.excecption.EmsDuplicatePersonException;
 import com.practica.excecption.EmsPersonNotFoundException;
 import com.practica.genericas.FechaHora;
 import com.practica.genericas.Persona;
+
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Poblacion {
 	LinkedList<Persona> lista ;

@@ -1,29 +1,14 @@
 package com.practica.ems.covid;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Stream;
-
-import com.practica.excecption.EmsDuplicateLocationException;
-import com.practica.excecption.EmsDuplicatePersonException;
-import com.practica.excecption.EmsInvalidNumberOfDataException;
-import com.practica.excecption.EmsInvalidTypeException;
-import com.practica.excecption.EmsLocalizationNotFoundException;
-import com.practica.excecption.EmsPersonNotFoundException;
-import com.practica.genericas.Constantes;
-import com.practica.genericas.Coordenada;
-import com.practica.genericas.FechaHora;
+import com.practica.excecption.*;
 import com.practica.genericas.Persona;
 import com.practica.genericas.PosicionPersona;
 import com.practica.lista.ListaContactos;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ContactosCovid {
 	private Poblacion poblacion;
@@ -165,10 +150,7 @@ public class ContactosCovid {
 		return false;
 	}
 
-	private String[] dividirEntrada(String input) {
-		String cadenas[] = input.split("\\n");
-		return cadenas;
-	}
+
 
 	private static String[] dividirLineaData(String data) {
 		return data.split("\\;");
