@@ -4,6 +4,7 @@ package com.practica.ems.covid;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -60,101 +61,20 @@ public class ContactosCovid {
 
 	public void loadData(String data, boolean reset) throws EmsInvalidTypeException, EmsInvalidNumberOfDataException,
 			EmsDuplicatePersonException, EmsDuplicateLocationException {
-		// borro información anterior
-		if (reset) {
-			this.poblacion = new Poblacion();
-			this.localizacion = new Localizacion();
-			this.listaContactos = new ListaContactos();
-		}
-		String datas[] = dividirEntrada(data);
-		for (String linea : datas) {
-			String datos[] = this.dividirLineaData(linea);
-			if (!datos[0].equals("PERSONA") && !datos[0].equals("LOCALIZACION")) {
-				throw new EmsInvalidTypeException();
-			}
-			if (datos[0].equals("PERSONA")) {
-				if (datos.length != Constantes.MAX_DATOS_PERSONA) {
-					throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
-				}
-				this.poblacion.addPersona(this.crearPersona(datos));
-			}
-			if (datos[0].equals("LOCALIZACION")) {
-				if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
-					throw new EmsInvalidNumberOfDataException("El número de datos para LOCALIZACION es menor de 6");
-				}
-				PosicionPersona pp = this.crearPosicionPersona(datos);
-				this.localizacion.addLocalizacion(pp);
-				this.listaContactos.insertarNodoTemporal(pp);
-			}
-		}
+		if (reset) resetData();
+		procesarLineas(dividirEntrada(data));
 	}
 
-	public void loadDataFile(String fichero, boolean reset) {
-		File archivo = null;
-		FileReader fr = null;
-		BufferedReader br = null;
-		String datas[] = null, data = null;
-		loadDataFile(fichero, reset, archivo, fr, br, datas, data);
-		
-	}
 
-	@SuppressWarnings("resource")
-	public void loadDataFile(String fichero, boolean reset, File archivo, FileReader fr, BufferedReader br, String datas[], String data ) {
-		try {
-			// Apertura del fichero y creacion de BufferedReader para poder
-			// hacer una lectura comoda (disponer del metodo readLine()).
-			archivo = new File(fichero);
-			fr = new FileReader(archivo);
-			br = new BufferedReader(fr);
-			if (reset) {
-				this.poblacion = new Poblacion();
-				this.localizacion = new Localizacion();
-				this.listaContactos = new ListaContactos();
-			} 
-			/**
-			 * Lectura del fichero	línea a línea. Compruebo que cada línea 
-			 * tiene el tipo PERSONA o LOCALIZACION y cargo la línea de datos en la 
-			 * lista correspondiente. Sino viene ninguno de esos tipos lanzo una excepción
-			 */
+	public void loadDataFile(String fichero, boolean reset) throws EmsInvalidTypeException, EmsInvalidNumberOfDataException {
+		if (reset) resetData();
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(fichero)))) {
+			String data;
 			while ((data = br.readLine()) != null) {
-				datas = dividirEntrada(data.trim());
-				for (String linea : datas) {
-					String datos[] = this.dividirLineaData(linea);
-					if (!datos[0].equals("PERSONA") && !datos[0].equals("LOCALIZACION")) {
-						throw new EmsInvalidTypeException();
-					}
-					if (datos[0].equals("PERSONA")) {
-						if (datos.length != Constantes.MAX_DATOS_PERSONA) {
-							throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
-						}
-						this.poblacion.addPersona(this.crearPersona(datos));
-					}
-					if (datos[0].equals("LOCALIZACION")) {
-						if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
-							throw new EmsInvalidNumberOfDataException(
-									"El número de datos para LOCALIZACION es menor de 6" );
-						}
-						PosicionPersona pp = this.crearPosicionPersona(datos);
-						this.localizacion.addLocalizacion(pp);
-						this.listaContactos.insertarNodoTemporal(pp);
-					}
-				}
-
+				procesarLineas(dividirEntrada(data.trim()));
 			}
-
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			// En el finally cerramos el fichero, para asegurarnos
-			// que se cierra tanto si todo va bien como si salta
-			// una excepcion.
-			try {
-				if (null != fr) {
-					fr.close();
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
 		}
 	}
 	public int findPersona(String documento) throws EmsPersonNotFoundException {
@@ -304,5 +224,44 @@ public class ContactosCovid {
 		segundo = Integer.parseInt(valores[1]);
 		FechaHora fechaHora = new FechaHora(dia, mes, anio, minuto, segundo);
 		return fechaHora;
+	}
+	private void resetData() {
+		this.poblacion = new Poblacion();
+		this.localizacion = new Localizacion();
+		this.listaContactos = new ListaContactos();
+	}
+	private void procesarLineas(String[] lineas)
+			throws EmsInvalidTypeException, EmsInvalidNumberOfDataException,
+			EmsDuplicatePersonException, EmsDuplicateLocationException {
+		for (String linea : lineas) {
+			String[] datos = this.dividirLineaData(linea);
+			validarTipo(datos[0]);
+			if (datos[0].equals("PERSONA")) {
+				procesarPersona(datos);
+			} else {
+				procesarLocalizacion(datos);
+			}
+		}
+	}
+	private void validarTipo(String tipo) throws EmsInvalidTypeException {
+		if (!tipo.equals("PERSONA") && !tipo.equals("LOCALIZACION")) {
+			throw new EmsInvalidTypeException();
+		}
+	}
+	private void procesarPersona(String[] datos)
+			throws EmsInvalidNumberOfDataException, EmsDuplicatePersonException {
+		if (datos.length != Constantes.MAX_DATOS_PERSONA) {
+			throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
+		}
+		this.poblacion.addPersona(this.crearPersona(datos));
+	}
+	private void procesarLocalizacion(String[] datos)
+			throws EmsInvalidNumberOfDataException, EmsDuplicateLocationException {
+		if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
+			throw new EmsInvalidNumberOfDataException("El número de datos para LOCALIZACION es menor de 6");
+		}
+		PosicionPersona pp = this.crearPosicionPersona(datos);
+		this.localizacion.addLocalizacion(pp);
+		this.listaContactos.insertarNodoTemporal(pp);
 	}
 }
