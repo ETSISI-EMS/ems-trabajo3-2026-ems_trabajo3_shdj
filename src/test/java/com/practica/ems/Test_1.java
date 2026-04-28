@@ -33,7 +33,7 @@ public class Test_1 {
 		try {
 			contactosCovid.loadData(test_data_str, false);
 		} catch (EmsInvalidTypeException | EmsInvalidNumberOfDataException | EmsDuplicatePersonException
-				| EmsDuplicateLocationException e) {
+				 | EmsDuplicateLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -100,7 +100,7 @@ public class Test_1 {
 					false);
 			Assertions.assertEquals(contactosCovid.findPersona("12345678J"), 3);
 		} catch (EmsInvalidTypeException | EmsInvalidNumberOfDataException | EmsDuplicatePersonException
-				| EmsDuplicateLocationException e) {
+				 | EmsDuplicateLocationException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error al cargar una persona valida");
 		}
@@ -113,7 +113,7 @@ public class Test_1 {
 			contactosCovid.loadData("LOCALIZACION;12345678J;16/05/2021;01:45;54.3890;28.1698\n", false);
 			Assertions.assertEquals(contactosCovid.findLocalizacion("12345678J", "16/05/2021", "01:45"), 5);
 		} catch (EmsInvalidTypeException | EmsInvalidNumberOfDataException | EmsDuplicatePersonException
-				| EmsDuplicateLocationException e) {
+				 | EmsDuplicateLocationException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error al cargar una localizacion valida");
 		}

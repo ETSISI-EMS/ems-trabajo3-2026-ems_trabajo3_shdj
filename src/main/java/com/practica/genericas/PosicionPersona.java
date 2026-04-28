@@ -1,6 +1,8 @@
 package com.practica.genericas;
 
 
+import com.practica.excecption.EmsInvalidNumberOfDataException;
+
 public class PosicionPersona {
 	private Coordenada coordenada;
 	private String documento;
@@ -38,6 +40,31 @@ public class PosicionPersona {
 	        		getCoordenada().getLongitud());
 	
 		return cadena;
+	}
+	// Dentro de PosicionPersona.java
+
+// ... resto de la clase ...
+
+	public static PosicionPersona parsePosicionPersona(String[] datos) throws EmsInvalidNumberOfDataException {
+		// AÑADIR ESTA COMPROBACIÓN
+		if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
+			throw new EmsInvalidNumberOfDataException("Número de datos incorrecto para LOCALIZACION");
+		}
+
+		PosicionPersona pp = new PosicionPersona();
+		pp.setDocumento(datos[1]);
+		pp.setFechaPosicion(FechaHora.parseFecha(datos[2], datos[3]));
+		pp.setCoordenada(new Coordenada(Float.parseFloat(datos[4]), Float.parseFloat(datos[5])));
+		return pp;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		PosicionPersona other = (PosicionPersona) obj;
+		return documento.equals(other.documento) &&
+				fechaPosicion.equals(other.fechaPosicion);
 	}
 		
 }
